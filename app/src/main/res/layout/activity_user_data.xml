@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserDataActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_laucher_background"/>
+
+    <LinearLayout
+        android:layout_margin="40px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/customborder">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello, it is your first connexion !\nPlease fill your data"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_marginBottom="15dp"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/inputText">
+
+                <EditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First name"
+                    android:nextFocusLeft="@id/etFirstName"
+                    android:nextFocusUp="@id/etFirstName" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:text="Gender"
+                style="@style/formText"/>
+            <RadioGroup
+                android:id="@+id/rbGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <RadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Male"
+                    android:textSize="20dp"
+                    android:layout_weight="1"
+                    android:theme="@style/RadioButton"/>
+
+                <RadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:textSize="20dp"
+                    android:layout_weight="1"
+                    android:theme="@style/RadioButton"/>
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Age"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Height"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerHeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Weight"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Level"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Playing for "/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerStylePlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Training frequency"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerFrequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                style="@style/formText"
+                android:text="Experience time"/>
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerExpTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:ms_text_color="@color/black"
+                app:ms_arrow_tint="@color/green"
+                android:textSize="15dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSaveUserData"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="Save >"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:background="@drawable/custombtn"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
