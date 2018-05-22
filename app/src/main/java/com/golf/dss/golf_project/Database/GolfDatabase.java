@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import com.golf.dss.golf_project.Classes.Club;
 import com.golf.dss.golf_project.Classes.User;
+
+import java.util.ArrayList;
 
 public class GolfDatabase extends SQLiteOpenHelper{
 
@@ -79,7 +82,7 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
 
     private GolfDatabase(Context context) {
-        super(context, Environment.getExternalStorageDirectory()+"/Android/data/com.golf.dss.golf_project/files/"+DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.allColumnsUser = new String[]{
                 USER_ID,
                 USER_FIRSTNAME,
@@ -157,10 +160,53 @@ public class GolfDatabase extends SQLiteOpenHelper{
         return user;
     }
 
+    /*------------------------------------------------------ CLUB METHODS ------------------------------------------------------*/
+    public void insertDefaultClubs(){
+        Club driver = new Club("Driver", 200, 230, 260, 150, 175, 200);
+        Club three_wood = new Club("3-wood", 180, 215, 235, 125, 150, 180);
+        Club five_wood = new Club("5-wood", 170, 195, 210, 105, 135, 170);
+        Club three_iron = new Club("3-iron", 160, 180, 200, 100, 125, 160);
+        Club four_iron = new Club("4-iron", 150, 170, 185, 90, 120, 150);
+        Club five_iron = new Club("5-iron", 140, 160, 170, 80, 110, 140);
+        Club six_iron = new Club("6-iron", 130, 150, 160, 70, 100, 130);
+        Club seven_iron = new Club("7-iron", 120, 140, 150, 65, 90, 120);
+        Club height_iron = new Club("8-iron", 110, 130, 140, 60, 80, 110);
+        Club nine_iron = new Club("9-iron", 95, 115, 130, 55, 70, 95);
+        Club PW = new Club("PW", 80, 105, 120, 50, 60, 80);
+        Club SW = new Club("SW", 60, 80, 100, 40, 50, 60);
+        ArrayList<Club> myDefaultClubs = new ArrayList<>();
+        myDefaultClubs.add(driver);
+        myDefaultClubs.add(three_wood);
+        myDefaultClubs.add(five_wood);
+        myDefaultClubs.add(three_iron);
+        myDefaultClubs.add(four_iron);
+        myDefaultClubs.add(five_iron);
+        myDefaultClubs.add(six_iron);
+        myDefaultClubs.add(seven_iron);
+        myDefaultClubs.add(height_iron);
+        myDefaultClubs.add(nine_iron);
+        myDefaultClubs.add(PW);
+        myDefaultClubs.add(SW);
+
+        SQLiteDatabase db = getWritableDatabase();
+        for (Club myClub: myDefaultClubs) {
+            ContentValues values = new ContentValues();
+            values.put(CLUB_NAME, myClub.getName());
+            values.put(CLUB_MEN_MIN_DISTANCE, myClub.getMenMinDistance());
+            values.put(CLUB_MEN_AVG_DISTANCE, myClub.getMenAvgDistance());
+            values.put(CLUB_MEN_MAX_DISTANCE, myClub.getMenMaxDistance());
+            values.put(CLUB_WOMEN_MIN_DISTANCE, myClub.getWomenMinDistance());
+            values.put(CLUB_WOMEN_AVG_DISTANCE, myClub.getWomenAvgDistance());
+            values.put(CLUB_WOMEN_MAX_DISTANCE, myClub.getWomenMaxDistance());
+            db.insert(CLUB_TABLE_NAME, null, values);
+        }
+    }
+
     /*------------------------------------------------------ TOOL METHODS ------------------------------------------------------*/
     public void deleteAllData() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(USER_TABLE_NAME, null, null);
+        db.delete(CLUB_TABLE_NAME, null, null);
     }
 
     public static GolfDatabase getInstance(Context context) {

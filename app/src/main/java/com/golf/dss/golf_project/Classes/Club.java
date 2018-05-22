@@ -9,7 +9,7 @@ public class Club {
     private int womenMaxDistance;
     private int womenAvgDistance;
 
-    public Club(String name, int menMinDistance, int menMaxDistance, int menAvgDistance, int womenMinDistance, int womenMaxDistance, int womenAvgDistance) {
+    public Club(String name, int menMinDistance,int menAvgDistance, int menMaxDistance, int womenMinDistance, int womenAvgDistance, int womenMaxDistance) {
         this.name = name;
         this.menMinDistance = menMinDistance;
         this.menMaxDistance = menMaxDistance;

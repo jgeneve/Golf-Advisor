@@ -49,21 +49,19 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
 
-        //Ask permission to the user
-        if (this.checkPermissionForReadExtertalStorage() == false) {
+        if (this.checkPermissionForLocation() == false) {
             try {
-                this.requestPermissionForReadExtertalStorage();
+                this.requestPermissionForLocation();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
-            this.db = GolfDatabase.getInstance(this);
-
-            //If the user already get an account -> Skip to the map
-            if(this.db.getConnectedUser() != null){
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-                this.finish(); //Close this activity
-            }
+        }
+        //Create or open database
+        this.db = GolfDatabase.getInstance(this);
+        //If the user already get an account -> Skip to the map
+        if (this.db.getConnectedUser() != null) {
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+            this.finish(); //Close this activity
         }
 
         //Components
@@ -139,26 +137,10 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
             );
             db.deleteAllData();
             db.insertConnectedUser(user);
+            db.insertDefaultClubs();
             startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
             finish(); //Close this activity
 
-        }
-    }
-
-    public boolean checkPermissionForReadExtertalStorage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-            return result == PackageManager.PERMISSION_GRANTED;
-        }
-        return false;
-    }
-
-    public void requestPermissionForReadExtertalStorage() {
-        try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 
@@ -176,34 +158,6 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        if(requestCode == 1){
-            //Create directory where the database will be store
-            File folder = new File(Environment.getExternalStorageDirectory() + "/Android/data/com.golf.dss.golf_project/files");
-            boolean success = true;
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-
-            this.db = GolfDatabase.getInstance(this);
-
-            //If the user already get an account -> Skip to the map
-            if(this.db.getConnectedUser() != null){
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-                this.finish(); //Close this activity
-            }
-
-            if (this.checkPermissionForLocation() == false) {
-                try {
-                    this.requestPermissionForLocation();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
