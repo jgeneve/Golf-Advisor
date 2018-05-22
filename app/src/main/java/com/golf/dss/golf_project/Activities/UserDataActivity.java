@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v7.app.ActionBar;
@@ -154,10 +155,40 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
 
     public void requestPermissionForLocation() {
         try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
+        }
+    }
+
+    public boolean checkPermissionForInternet() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = this.checkSelfPermission(Manifest.permission.INTERNET);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+    public void requestPermissionForInternet() {
+        try {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 1){
+            if (this.checkPermissionForInternet() == false) {
+                try {
+                    this.requestPermissionForInternet();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

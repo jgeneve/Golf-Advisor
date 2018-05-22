@@ -94,7 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 HashMap<String, String> myParams = new HashMap<>();
                                 myParams.put("lat", String.valueOf(currentLocation.getLatitude()));
                                 myParams.put("lon", String.valueOf(currentLocation.getLongitude()));
-                                myParams.put("appid", getResources().getString(R.string.weatherApiKey));
+                                myParams.put("APPID", getResources().getString(R.string.weatherApiKey));
 
                                 AsyncTaskWeather weatherApi = new AsyncTaskWeather(getApplicationContext(), myParams);
                                 weatherApi.setOnCompleteListener(new OnCompleteListenerAsync() {
