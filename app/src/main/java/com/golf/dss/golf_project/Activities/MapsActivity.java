@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
 import com.golf.dss.golf_project.R;
+import com.golf.dss.golf_project.Tools.OnCompleteListenerAsync;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,11 +32,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 /**
  * Created by User on 10/2/2017.
  */
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener, OnCompleteListenerAsync {
 
 
     private static final String TAG = "MapActivity";
@@ -51,6 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Button btnValidateLocation;
     private LatLng aimLocation;
+    private JSONObject jsonWeather;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +77,41 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
+
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+            try{
+                if(mLocationPermissionsGranted){
+
+                    final Task location = mFusedLocationProviderClient.getLastLocation();
+                    location.addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if(task.isSuccessful()){
+                                Log.d(TAG, "onComplete: found location!");
+                                Location currentLocation = (Location) task.getResult();
+
+                                HashMap<String, String> myParams = new HashMap<>();
+                                myParams.put("lat", String.valueOf(currentLocation.getLatitude()));
+                                myParams.put("lon", String.valueOf(currentLocation.getLongitude()));
+                                myParams.put("appid", getResources().getString(R.string.weatherApiKey));
+
+                                AsyncTaskWeather weatherApi = new AsyncTaskWeather(getApplicationContext(), myParams);
+                                weatherApi.setOnCompleteListener(new OnCompleteListenerAsync() {
+                                    @Override
+                                    public void onCompleteAsync(String str) {
+                                        Log.d(TAG, str);
+                                    }
+                                });
+                                weatherApi.execute();
+                            }
+                        }
+                    });
+                }
+            }catch (SecurityException e){
+                Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+            }
+
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
@@ -123,6 +165,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             });
+
+
         }
     }
 
@@ -247,5 +291,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
             }
         }
+    }
+
+    public void onCompleteAsync(String result) {
+        Log.d(TAG, result);
     }
 }

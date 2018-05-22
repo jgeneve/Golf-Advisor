@@ -79,7 +79,7 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
 
     private GolfDatabase(Context context) {
-        super(context, Environment.getExternalStorageDirectory()+"/Android/data/com.golf.dss.golf_project/files/"+DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.allColumnsUser = new String[]{
                 USER_ID,
                 USER_FIRSTNAME,

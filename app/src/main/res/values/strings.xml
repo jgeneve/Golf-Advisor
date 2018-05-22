@@ -1,4 +1,5 @@
 <resources>
+    <string name="weatherApiKey">386b29d78b54a309abd0a98d48e934f2</string>
     <string name="app_name">Golf Advisor</string>
     <string-array name="age_array">
         <item>-11</item>
