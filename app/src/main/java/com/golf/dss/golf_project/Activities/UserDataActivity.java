@@ -1,27 +1,31 @@
 package com.golf.dss.golf_project.Activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
 import com.golf.dss.golf_project.R;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-public class UserDataActivity extends AppCompatActivity implements View.OnClickListener{
+import java.io.File;
+
+public class UserDataActivity extends AppCompatActivity implements OnClickListener, OnRequestPermissionsResultCallback {
     private GolfDatabase db;
     private RadioGroup rbGender;
     private RadioButton rbMale;
@@ -36,47 +40,47 @@ public class UserDataActivity extends AppCompatActivity implements View.OnClickL
     private EditText etFirstname;
     private Button btnSaveUserData;
 
-    public UserDataActivity () {this.db = null;}
+    public UserDataActivity() {
+        this.db = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_data);
-       if(this.checkPermissionForReadExtertalStorage() == false){
-           try {
-               this.requestPermissionForReadExtertalStorage();
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       }
 
-        if(this.checkPermissionForWriteExtertalStorage() == false){
+        //Ask permission to the user
+        if (this.checkPermissionForReadExtertalStorage() == false) {
             try {
-                this.requestPermissionForWriteExtertalStorage();
+                this.requestPermissionForReadExtertalStorage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            this.db = GolfDatabase.getInstance(this);
+
+            //If the user already get an account -> Skip to the map
+            if(this.db.getConnectedUser() != null){
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                this.finish(); //Close this activity
+            }
         }
 
-        this.db = GolfDatabase.getInstance(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
         //Components
-        this.rbGender = (RadioGroup) findViewById(R.id.rbGender);
-        this.rbMale = (RadioButton) findViewById(R.id.rbMale);
-        this.rbFemale = (RadioButton) findViewById(R.id.rbFemale);
-        this.spinnerAge = (MaterialSpinner) findViewById(R.id.spinnerAge);
-        this.spinnerHeight = (MaterialSpinner) findViewById(R.id.spinnerHeight);
-        this.spinnerWeight = (MaterialSpinner) findViewById(R.id.spinnerWeight);
-        this.spinnerLevel = (MaterialSpinner) findViewById(R.id.spinnerLevel);
-        this.spinnerStyle = (MaterialSpinner) findViewById(R.id.spinnerStylePlay);
-        this.spinnerFrequency = (MaterialSpinner) findViewById(R.id.spinnerFrequency);
-        this.spinnerExpTime = (MaterialSpinner) findViewById(R.id.spinnerExpTime);
-        this.etFirstname = (EditText) findViewById(R.id.etFirstName);
-        this.btnSaveUserData = (Button) findViewById(R.id.btnSaveUserData);
+        this.rbGender = findViewById(R.id.rbGender);
+        this.rbMale = findViewById(R.id.rbMale);
+        this.rbFemale = findViewById(R.id.rbFemale);
+        this.spinnerAge = findViewById(R.id.spinnerAge);
+        this.spinnerHeight = findViewById(R.id.spinnerHeight);
+        this.spinnerWeight = findViewById(R.id.spinnerWeight);
+        this.spinnerLevel = findViewById(R.id.spinnerLevel);
+        this.spinnerStyle = findViewById(R.id.spinnerStylePlay);
+        this.spinnerFrequency = findViewById(R.id.spinnerFrequency);
+        this.spinnerExpTime = findViewById(R.id.spinnerExpTime);
+        this.etFirstname = findViewById(R.id.etFirstName);
+        this.btnSaveUserData = findViewById(R.id.btnSaveUserData);
 
-
+        //All adapters for spinners
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.age_array));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAge.setAdapter(adapter);
@@ -108,19 +112,20 @@ public class UserDataActivity extends AppCompatActivity implements View.OnClickL
         //Listeners
         this.rbGender.setOnClickListener(this);
         this.btnSaveUserData.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == this.rbGender.getId()){
+        if (v.getId() == this.rbGender.getId()) { //Click on RadioButton
             int selectedId = this.rbGender.getCheckedRadioButtonId();
-            if(selectedId == this.rbMale.getId()){
+            if (selectedId == this.rbMale.getId()) {
                 this.rbFemale.setSelected(false);
-            }else if(selectedId == this.rbFemale.getId()){
+            } else if (selectedId == this.rbFemale.getId()) {
                 this.rbMale.setSelected(false);
             }
-        }else if(v.getId() == this.btnSaveUserData.getId()){
-            RadioButton selectedRadioButton = (RadioButton) findViewById(rbGender.getCheckedRadioButtonId());
+        } else if (v.getId() == this.btnSaveUserData.getId()) { //Click on button save
+            RadioButton selectedRadioButton = findViewById(rbGender.getCheckedRadioButtonId());
             User user = new User(
                     etFirstname.getText().toString(),
                     spinnerAge.getText().toString(),
@@ -131,8 +136,12 @@ public class UserDataActivity extends AppCompatActivity implements View.OnClickL
                     spinnerStyle.getText().toString(),
                     spinnerFrequency.getText().toString(),
                     spinnerExpTime.getText().toString()
-                    );
+            );
+            db.deleteAllData();
             db.insertConnectedUser(user);
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+            finish(); //Close this activity
+
         }
     }
 
@@ -144,29 +153,57 @@ public class UserDataActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
 
-    public boolean checkPermissionForWriteExtertalStorage() {
+    public void requestPermissionForReadExtertalStorage() {
+        try {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public boolean checkPermissionForLocation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int result = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             return result == PackageManager.PERMISSION_GRANTED;
         }
         return false;
     }
 
-    public void requestPermissionForReadExtertalStorage() throws Exception {
+    public void requestPermissionForLocation() {
         try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    public void requestPermissionForWriteExtertalStorage() throws Exception {
-        try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        if(requestCode == 1){
+            //Create directory where the database will be store
+            File folder = new File(Environment.getExternalStorageDirectory() + "/Android/data/com.golf.dss.golf_project/files");
+            boolean success = true;
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            this.db = GolfDatabase.getInstance(this);
+
+            //If the user already get an account -> Skip to the map
+            if(this.db.getConnectedUser() != null){
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                this.finish(); //Close this activity
+            }
+
+            if (this.checkPermissionForLocation() == false) {
+                try {
+                    this.requestPermissionForLocation();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

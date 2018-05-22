@@ -15,7 +15,6 @@ public class GolfDatabase extends SQLiteOpenHelper{
     //General informations
     private static final String DATABASE_NAME = "GolfDB.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String PATH = Environment.getExternalStorageDirectory()+"/Android/data/com.golf.dss.golf_project/files/"+DATABASE_NAME;
 
 
     //Tables name
@@ -58,7 +57,6 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
     private GolfDatabase(Context context) {
         super(context, Environment.getExternalStorageDirectory()+"/Android/data/com.golf.dss.golf_project/files/"+DATABASE_NAME, null, DATABASE_VERSION);
-        Log.e("Path",Environment.getExternalStorageDirectory().toString());
         this.allColumnsUser = new String[]{USER_ID, USER_FIRSTNAME, USER_AGE, USER_GENDER, USER_HEIGHT, USER_WEIGHT, USER_LEVEL, USER_STYLE, USER_TRAINING_FREQUENCY, USER_EXPERIENCE_TIME};
     }
 
@@ -93,7 +91,8 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
     public User getConnectedUser() {
         User user = null;
-        Cursor cursor = getReadableDatabase().query(USER_TABLE_NAME, this.allColumnsUser, null, null, null, null, null);
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(USER_TABLE_NAME, this.allColumnsUser, null, null, null, null, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             user = new User(
@@ -113,6 +112,10 @@ public class GolfDatabase extends SQLiteOpenHelper{
     }
 
     /*------------------------------------------------------ TOOL METHODS ------------------------------------------------------*/
+    public void deleteAllData() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(USER_TABLE_NAME, null, null);
+    }
 
     public static GolfDatabase getInstance(Context context) {
         if (mInstance == null) {

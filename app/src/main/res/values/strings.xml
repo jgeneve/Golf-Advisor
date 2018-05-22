@@ -48,4 +48,5 @@
         <item>&#60; 10 years</item>
         <item>+ 10 years</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 </resources>
