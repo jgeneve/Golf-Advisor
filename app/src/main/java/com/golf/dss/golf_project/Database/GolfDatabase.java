@@ -19,6 +19,7 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
     //Tables name
     private static final String USER_TABLE_NAME = "USER";
+    private static final String CLUB_TABLE_NAME = "CLUB";
 
     //Tables columns names
     //=> USER
@@ -32,8 +33,18 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private static final String USER_STYLE = "STYLE";
     private static final String USER_TRAINING_FREQUENCY = "TRAINING_FREQUENCY";
     private static final String USER_EXPERIENCE_TIME = "EXPERIENCE_TIME";
+    //=> CLUB
+    private static final String CLUB_ID = "ID";
+    private static final String CLUB_NAME = "NAME";
+    private static final String CLUB_MEN_MIN_DISTANCE = "MEN_MIN_DISTANCE";
+    private static final String CLUB_MEN_MAX_DISTANCE = "MEN_MAX_DISTANCE";
+    private static final String CLUB_MEN_AVG_DISTANCE = "MEN_AVG_DISTANCE";
+    private static final String CLUB_WOMEN_MIN_DISTANCE = "WOMEN_MIN_DISTANCE";
+    private static final String CLUB_WOMEN_MAX_DISTANCE = "WOMEN_MAX_DISTANCE";
+    private static final String CLUB_WOMEN_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
 
     //Creation string
+    //=> USER
     private static final String DATABASE_CREATE_USER = "CREATE TABLE " + USER_TABLE_NAME + "("
             + USER_ID + " integer primary key autoincrement,"
             + USER_FIRSTNAME + " text not null,"
@@ -46,9 +57,21 @@ public class GolfDatabase extends SQLiteOpenHelper{
             + USER_TRAINING_FREQUENCY + " text not null,"
             + USER_EXPERIENCE_TIME + " text not null"
             + ");";
+    //=> CLUB
+    private static final String DATABASE_CREATE_CLUB = "CREATE TABLE " + CLUB_TABLE_NAME + "("
+            + CLUB_ID + " integer primary key autoincrement,"
+            + CLUB_NAME + " text not null,"
+            + CLUB_MEN_MIN_DISTANCE + " integer not null,"
+            + CLUB_MEN_MAX_DISTANCE + " integer not null,"
+            + CLUB_MEN_AVG_DISTANCE + " integer not null,"
+            + CLUB_WOMEN_MIN_DISTANCE + " integer not null,"
+            + CLUB_WOMEN_MAX_DISTANCE + " integer not null,"
+            + CLUB_WOMEN_AVG_DISTANCE + " integer not null"
+            + ");";
 
     private static GolfDatabase mInstance;
     private String[] allColumnsUser;
+    private String[] allColumnsClub;
 
     static {
         mInstance = null;
@@ -57,18 +80,41 @@ public class GolfDatabase extends SQLiteOpenHelper{
 
     private GolfDatabase(Context context) {
         super(context, Environment.getExternalStorageDirectory()+"/Android/data/com.golf.dss.golf_project/files/"+DATABASE_NAME, null, DATABASE_VERSION);
-        this.allColumnsUser = new String[]{USER_ID, USER_FIRSTNAME, USER_AGE, USER_GENDER, USER_HEIGHT, USER_WEIGHT, USER_LEVEL, USER_STYLE, USER_TRAINING_FREQUENCY, USER_EXPERIENCE_TIME};
+        this.allColumnsUser = new String[]{
+                USER_ID,
+                USER_FIRSTNAME,
+                USER_AGE,
+                USER_GENDER,
+                USER_HEIGHT,
+                USER_WEIGHT,
+                USER_LEVEL,
+                USER_STYLE,
+                USER_TRAINING_FREQUENCY,
+                USER_EXPERIENCE_TIME
+        };
+        this.allColumnsClub = new String[] {
+                CLUB_ID,
+                CLUB_NAME,
+                CLUB_MEN_MIN_DISTANCE,
+                CLUB_MEN_MAX_DISTANCE,
+                CLUB_MEN_AVG_DISTANCE,
+                CLUB_WOMEN_MIN_DISTANCE,
+                CLUB_WOMEN_MAX_DISTANCE,
+                CLUB_WOMEN_AVG_DISTANCE
+        };
     }
 
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE_USER);
+        database.execSQL(DATABASE_CREATE_CLUB);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         Log.w(GolfDatabase.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         database.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        database.execSQL("DROP TABLE IF EXISTS " + CLUB_TABLE_NAME);
         onCreate(database);
     }
 
