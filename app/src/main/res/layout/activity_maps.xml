@@ -17,80 +17,233 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/customborderblack"
-            android:elevation="10dp"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:background="@drawable/customborderblackround"
+            android:elevation="10dp">
 
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@mipmap/ic_user" />
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="130dp"
+                android:text="USERNAME"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvUserLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="130dp"
+                android:layout_marginTop="20dp"
+                android:text="Level : beginner"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/ivSettings"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_settings" />
+
+            <TextView
+                android:id="@+id/tvNbShoots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="170dp"
+                android:text="-"
+                android:textColor="@color/white"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="130dp"
+                android:layout_marginTop="15dp"
+                android:src="@mipmap/ic_shoot" />
 
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/btnValidateLocation"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Validate"
-            android:textColor="@color/white"
-            android:textSize="15dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/custombtn"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
-            android:layout_marginBottom="20dp"/>
-
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="110dp"
+            android:layout_marginTop="120dp"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageViewWind"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_above="@+id/textViewWind"
-                app:srcCompat="@drawable/wind"
-                android:layout_marginLeft="15dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textViewWind"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:text="10m/s"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
+                <ImageView
+                    android:id="@+id/imageViewWind"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/textViewWind"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@mipmap/ic_wind" />
 
-            <TextView
-                android:id="@+id/textViewWindDirection"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:text="N"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
+                <TextView
+                    android:id="@+id/textViewWindDirection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:text="N"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
 
-            <ImageView
-                android:id="@+id/imageViewElevation"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_above="@+id/textViewWind"
-                android:layout_marginLeft="15dp"
-                app:srcCompat="@drawable/elevation" />
+                <TextView
+                    android:id="@+id/textViewWind"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:text="10m/s"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewElevation"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:text="-130m"
-                android:textColor="@color/black"
-                android:textSize="14dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageViewElevation"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/textViewWind"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp"
+                    app:srcCompat="@mipmap/ic_elevation" />
+
+                <TextView
+                    android:id="@+id/textViewElevation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:text="-130m"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/customborderblack"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btnIncident"
+                    android:layout_gravity="center"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="14dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/ic_incident"
+                    android:background="@drawable/button_circle_white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Incident"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btnValidateShoot"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/button_circle_green"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_shoot" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Shoot"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btnFinish"
+                    android:layout_gravity="center"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="14dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/ic_finish"
+                    android:background="@drawable/button_circle_white"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Finish"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
         />
 
     </RelativeLayout>

@@ -84,7 +84,6 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private GolfDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.allColumnsUser = new String[]{
-                USER_ID,
                 USER_FIRSTNAME,
                 USER_AGE,
                 USER_GENDER,

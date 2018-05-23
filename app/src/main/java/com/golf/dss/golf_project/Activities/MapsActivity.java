@@ -13,14 +13,21 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
+import com.golf.dss.golf_project.Classes.User;
+import com.golf.dss.golf_project.Database.GolfDatabase;
 import com.golf.dss.golf_project.R;
 import com.golf.dss.golf_project.Tools.OnCompleteListenerAsync;
+import com.golf.dss.golf_project.Tools.WeatherTools;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,15 +63,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final float DEFAULT_ZOOM = 18f;
     private Marker clickedMarker = null;
     private Polyline polyline = null;
+    private GolfDatabase db = null;
+    private ImageButton btnValidateShoot;
+    private TextView textViewWind;
+    private TextView textViewWindDirection;
+    private TextView tvUserName;
+    private TextView tvUserLevel;
+    private TextView tvNbShoots;
+    private ImageView ivSettings;
 
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    private Button btnValidateLocation;
-    private TextView textViewWind;
-    private TextView textViewWindDirection;
     private LatLng aimLocation;
     private JSONObject jsonWeather;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,10 +86,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         getLocationPermission();
 
-        btnValidateLocation = findViewById(R.id.btnValidateLocation);
-        btnValidateLocation.setOnClickListener(this);
-        textViewWind = findViewById(R.id.textViewWind);
-        textViewWindDirection = findViewById(R.id.textViewWindDirection);
+        this.db = GolfDatabase.getInstance(this);
+        User user = this.db.getConnectedUser();
+        //Find elements
+        this.btnValidateShoot = findViewById(R.id.btnValidateShoot);
+        this.textViewWind = findViewById(R.id.textViewWind);
+        this.textViewWindDirection = findViewById(R.id.textViewWindDirection);
+        this.textViewWindDirection = findViewById(R.id.textViewWindDirection);
+        this.tvUserName = findViewById(R.id.tvUserName);
+        this.tvUserLevel = findViewById(R.id.tvUserLevel);
+        this.tvNbShoots = findViewById(R.id.tvNbShoots);
+        this.ivSettings = findViewById(R.id.ivSettings);
+
+        //Fill textview
+        this.tvUserName.setText(user.getFirstname());
+        this.tvUserLevel.setText("Level : "+user.getLevel().toLowerCase());
+
+        //Set listeners
+        btnValidateShoot.setOnClickListener(this);
+        this.ivSettings.setOnClickListener(this);
     }
 
     @Override
@@ -115,9 +144,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             jsonWeather = new JSONObject(str);
                                             JSONObject windObj = jsonWeather.getJSONObject("wind");
                                             String windSpeed = windObj.getString("speed");
-                                            String windDirection =  getWindDirection(windObj.getInt("deg"));
+                                            String windDirection =  WeatherTools.getWindDirection(windObj.getInt("deg"));
                                             textViewWind.setText(windSpeed + "m/s");
-                                            textViewWindDirection.setText(windDirection);
+                                            textViewWindDirection.setText(windDirection+" - ");
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -144,7 +173,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMapToolbarEnabled(false); // Disable itinerary and streetview on map
-            mMap.setPadding(0, 450, 0, 350);
+            mMap.setPadding(0, 450, 0, 400);
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
@@ -156,7 +185,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MarkerOptions options = new MarkerOptions()
                             .position(latLng)
                             .title("Aiming point")
-                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("target",60,60)))
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("ic_target",60,60)))
                             .anchor(0.5f, 0.5f);
                     clickedMarker = mMap.addMarker(options);
                     aimLocation = latLng;
@@ -286,7 +315,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == btnValidateLocation.getId()){
+        if(v.getId() == btnValidateShoot.getId()){
             mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
             try{
                 if(mLocationPermissionsGranted){
@@ -296,7 +325,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if(task.isSuccessful()){
-                                float [] results = new float[5];
                                 Location currentLocation = (Location) task.getResult();
                                 Location dest = new Location("aimLocation");
                                 dest.setLatitude(aimLocation.latitude);
@@ -315,48 +343,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
             }
         }
+
+        if(v.getId() == this.ivSettings.getId()){
+            PopupMenu popupMenu = new PopupMenu(this,this.ivSettings);
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() { //Listener for click on an item of the menu
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Toast.makeText(getApplicationContext(), "You click on "+item.getTitle(), Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            });
+
+            popupMenu.show();
+        }
     }
 
     public Bitmap resizeMapIcons(String iconName, int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "mipmap", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
-    }
-
-    public String getWindDirection(int deg){
-        if (deg>11.25 && deg<33.75){
-            return "NNE";
-        }else if (deg>33.75 && deg<56.25){
-            return "ENE";
-        }else if (deg>56.25 && deg<78.75){
-            return "E";
-        }else if (deg>78.75 && deg<101.25){
-            return "ESE";
-        }else if (deg>101.25 && deg<123.75){
-            return "ESE";
-        }else if (deg>123.75 && deg<146.25){
-            return "SE";
-        }else if (deg>146.25 && deg<168.75){
-            return "SSE";
-        }else if (deg>168.75 && deg<191.25){
-            return "S";
-        }else if (deg>191.25 && deg<213.75){
-            return "SSW";
-        }else if (deg>213.75 && deg<236.25){
-            return "SW";
-        }else if (deg>236.25 && deg<258.75){
-            return "WSW";
-        }else if (deg>258.75 && deg<281.25){
-            return "W";
-        }else if (deg>281.25 && deg<303.75){
-            return "WNW";
-        }else if (deg>303.75 && deg<326.25){
-            return "NW";
-        }else if (deg>326.25 && deg<348.75){
-            return "NNW";
-        }else{
-            return "N";
-        }
     }
 
     public void onCompleteAsync(String result) {
