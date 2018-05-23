@@ -2,6 +2,8 @@ package com.golf.dss.golf_project.Activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
@@ -24,6 +27,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,6 +37,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -56,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Button btnValidateLocation;
+    private TextView textViewWind;
     private LatLng aimLocation;
     private JSONObject jsonWeather;
 
@@ -67,6 +75,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         btnValidateLocation = findViewById(R.id.btnValidateLocation);
         btnValidateLocation.setOnClickListener(this);
+        textViewWind = findViewById(R.id.textBoxWind);
     }
 
     @Override
@@ -92,16 +101,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 Location currentLocation = (Location) task.getResult();
 
                                 HashMap<String, String> myParams = new HashMap<>();
+                                myParams.put("APPID", getResources().getString(R.string.weatherApiKey));
                                 myParams.put("lat", String.valueOf(currentLocation.getLatitude()));
                                 myParams.put("lon", String.valueOf(currentLocation.getLongitude()));
-                                myParams.put("APPID", getResources().getString(R.string.weatherApiKey));
-                                myParams.put("units", "metric");
+                                // myParams.put("units", "metric");
 
                                 AsyncTaskWeather weatherApi = new AsyncTaskWeather(getApplicationContext(), myParams);
                                 weatherApi.setOnCompleteListener(new OnCompleteListenerAsync() {
                                     @Override
                                     public void onCompleteAsync(String str) {
                                         Log.d(TAG, str);
+                                        try {
+                                            JSONObject json = new JSONObject(str);
+                                            JSONObject wind = new JSONObject(json.getString("wind"));
+
+                                            String windSpeed = wind.getString("speed");
+                                            //Double windDirection = wind.getDouble("deg");
+                                            textViewWind.setText(windSpeed + " m/s");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 });
                                 weatherApi.execute();
@@ -134,7 +153,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         polyline.remove();
                     }
                     MarkerOptions options = new MarkerOptions()
-                            .position(latLng);
+                            .position(latLng)
+                            .title("Aiming point")
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("target",60,60)))
+                            .anchor(0.5f, 0.5f);
                     clickedMarker = mMap.addMarker(options);
                     aimLocation = latLng;
 
@@ -292,6 +314,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
             }
         }
+    }
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     public void onCompleteAsync(String result) {

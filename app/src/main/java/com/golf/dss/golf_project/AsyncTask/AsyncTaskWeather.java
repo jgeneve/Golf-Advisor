@@ -65,7 +65,7 @@ public class AsyncTaskWeather extends AsyncTask<Void, Void, String> {
             HttpURLConnection conn = (HttpURLConnection) new URL(requestURL+url).openConnection();
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
             OutputStream os = conn.getOutputStream();
