@@ -27,7 +27,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -37,7 +36,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Button btnValidateLocation;
     private TextView textViewWind;
+    private TextView textViewWindDirection;
     private LatLng aimLocation;
     private JSONObject jsonWeather;
 
@@ -75,7 +74,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         btnValidateLocation = findViewById(R.id.btnValidateLocation);
         btnValidateLocation.setOnClickListener(this);
-        textViewWind = findViewById(R.id.textBoxWind);
+        textViewWind = findViewById(R.id.textViewWind);
+        textViewWindDirection = findViewById(R.id.textViewWindDirection);
     }
 
     @Override
@@ -112,12 +112,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     public void onCompleteAsync(String str) {
                                         Log.d(TAG, str);
                                         try {
-                                            JSONObject json = new JSONObject(str);
-                                            JSONObject wind = new JSONObject(json.getString("wind"));
-
-                                            String windSpeed = wind.getString("speed");
-                                            //Double windDirection = wind.getDouble("deg");
-                                            textViewWind.setText(windSpeed + " m/s");
+                                            jsonWeather = new JSONObject(str);
+                                            JSONObject windObj = jsonWeather.getJSONObject("wind");
+                                            String windSpeed = windObj.getString("speed");
+                                            String windDirection =  getWindDirection(windObj.getInt("deg"));
+                                            textViewWind.setText(windSpeed + "m/s");
+                                            textViewWindDirection.setText(windDirection);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -143,6 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.getUiSettings().setCompassEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMapToolbarEnabled(false); // Disable itinerary and streetview on map
             mMap.setPadding(0, 450, 0, 350);
 
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -320,6 +321,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
+    }
+
+    public String getWindDirection(int deg){
+        if (deg>11.25 && deg<33.75){
+            return "NNE";
+        }else if (deg>33.75 && deg<56.25){
+            return "ENE";
+        }else if (deg>56.25 && deg<78.75){
+            return "E";
+        }else if (deg>78.75 && deg<101.25){
+            return "ESE";
+        }else if (deg>101.25 && deg<123.75){
+            return "ESE";
+        }else if (deg>123.75 && deg<146.25){
+            return "SE";
+        }else if (deg>146.25 && deg<168.75){
+            return "SSE";
+        }else if (deg>168.75 && deg<191.25){
+            return "S";
+        }else if (deg>191.25 && deg<213.75){
+            return "SSW";
+        }else if (deg>213.75 && deg<236.25){
+            return "SW";
+        }else if (deg>236.25 && deg<258.75){
+            return "WSW";
+        }else if (deg>258.75 && deg<281.25){
+            return "W";
+        }else if (deg>281.25 && deg<303.75){
+            return "WNW";
+        }else if (deg>303.75 && deg<326.25){
+            return "NW";
+        }else if (deg>326.25 && deg<348.75){
+            return "NNW";
+        }else{
+            return "N";
+        }
     }
 
     public void onCompleteAsync(String result) {

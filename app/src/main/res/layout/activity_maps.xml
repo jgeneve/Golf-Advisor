@@ -50,18 +50,48 @@
                 android:id="@+id/imageViewWind"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_above="@+id/textBoxWind"
+                android:layout_above="@+id/textViewWind"
                 app:srcCompat="@drawable/wind"
                 android:layout_marginLeft="15dp"/>
+
             <TextView
-                android:id="@+id/textBoxWind"
+                android:id="@+id/textViewWind"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:text="Wind"
+                android:text="10m/s"
+                android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="14dp"/>
-        </LinearLayout>/>
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textViewWindDirection"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="N"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:id="@+id/imageViewElevation"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/textViewWind"
+                android:layout_marginLeft="15dp"
+                app:srcCompat="@drawable/elevation" />
+
+            <TextView
+                android:id="@+id/textViewElevation"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:text="-130m"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+        </LinearLayout>
+        />
 
     </RelativeLayout>
 
