@@ -69,8 +69,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private TextView textViewWindDirection;
     private TextView tvUserName;
     private TextView tvUserLevel;
+    private TextView tvElevation;
     private TextView tvNbShoots;
     private ImageView ivSettings;
+    private ImageView ivUserPic;
 
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
@@ -97,10 +99,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.tvUserLevel = findViewById(R.id.tvUserLevel);
         this.tvNbShoots = findViewById(R.id.tvNbShoots);
         this.ivSettings = findViewById(R.id.ivSettings);
+        this.ivUserPic = findViewById(R.id.ivUserPic);
+        this.tvElevation = findViewById(R.id.tvElevation);
 
         //Fill textview
         this.tvUserName.setText(user.getFirstname());
         this.tvUserLevel.setText("Level : "+user.getLevel().toLowerCase());
+        if(user.getGender().toLowerCase() == "female"){
+            this.ivUserPic.setImageResource(R.mipmap.ic_user_woman);
+        }
+
 
         //Set listeners
         btnValidateShoot.setOnClickListener(this);
@@ -218,8 +226,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             });
-
-
         }
     }
 
@@ -238,7 +244,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
+                            tvElevation.setText(String.valueOf(currentLocation.getAltitude() +" m"));
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
 

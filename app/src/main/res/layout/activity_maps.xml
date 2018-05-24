@@ -26,9 +26,10 @@
             android:elevation="10dp">
 
             <ImageView
+                android:id="@+id/ivUserPic"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:src="@mipmap/ic_user" />
+                android:src="@mipmap/ic_user_man" />
 
             <TextView
                 android:id="@+id/tvUserName"
@@ -135,12 +136,12 @@
                     app:srcCompat="@mipmap/ic_elevation" />
 
                 <TextView
-                    android:id="@+id/textViewElevation"
+                    android:id="@+id/tvElevation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:text="-130m"
+                    android:text="- m"
                     android:textColor="@color/white"
                     android:textSize="15dp" />
             </LinearLayout>
