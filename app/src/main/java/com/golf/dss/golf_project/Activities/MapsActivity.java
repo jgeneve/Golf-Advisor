@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -27,7 +26,7 @@ import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
 import com.golf.dss.golf_project.R;
 import com.golf.dss.golf_project.Tools.OnCompleteListenerAsync;
-import com.golf.dss.golf_project.Tools.WeatherTools;
+import com.golf.dss.golf_project.Tools.MapTools;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,7 +55,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private static final String TAG = "MapActivity";
-
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -78,6 +76,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LatLng aimLocation;
+    public static double aimElevation;
     private JSONObject jsonWeather;
 
 
@@ -91,6 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.db = GolfDatabase.getInstance(this);
         User user = this.db.getConnectedUser();
         //Find elements
+        this.aimElevation = 0.0;
         this.btnValidateShoot = findViewById(R.id.btnValidateShoot);
         this.textViewWind = findViewById(R.id.textViewWind);
         this.textViewWindDirection = findViewById(R.id.textViewWindDirection);
@@ -152,7 +152,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             jsonWeather = new JSONObject(str);
                                             JSONObject windObj = jsonWeather.getJSONObject("wind");
                                             String windSpeed = windObj.getString("speed");
-                                            String windDirection =  WeatherTools.getWindDirection(windObj.getInt("deg"));
+                                            String windDirection =  MapTools.getWindDirection(windObj.getInt("deg"));
                                             textViewWind.setText(windSpeed + "m/s");
                                             textViewWindDirection.setText(windDirection+" - ");
                                         } catch (JSONException e) {
@@ -201,7 +201,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
                     try{
                         if(mLocationPermissionsGranted){
-
                             final Task location = mFusedLocationProviderClient.getLastLocation();
                             location.addOnCompleteListener(new OnCompleteListener() {
                                 @Override
@@ -244,7 +243,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-                            tvElevation.setText(String.valueOf(currentLocation.getAltitude() +" m"));
+                            int elevation = (int) currentLocation.getAltitude();
+
+                            tvElevation.setText(String.valueOf(elevation) +"m");
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
 
@@ -336,8 +337,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 dest.setLatitude(aimLocation.latitude);
                                 dest.setLongitude(aimLocation.longitude);
                                 float distance = currentLocation.distanceTo(dest);
-                                Toast.makeText(getApplicationContext(), String.valueOf(distance)+" meters", Toast.LENGTH_LONG).show();
 
+                                MapTools.getPointElevation(getApplicationContext(), dest.getLatitude(), dest.getLongitude());
+                                String destElevation = String.valueOf((int) aimElevation);
+                                Toast.makeText(getApplicationContext(), destElevation +" meters", Toast.LENGTH_LONG).show();
                             }else{
                                 Log.d(TAG, "onComplete: current location is null");
                                 Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
