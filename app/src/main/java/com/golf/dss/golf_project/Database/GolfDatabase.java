@@ -137,6 +137,11 @@ public class GolfDatabase extends SQLiteOpenHelper{
         db.insert(USER_TABLE_NAME, null, values);
     }
 
+    public void deleteConnectedUser() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(USER_TABLE_NAME, null, null);
+    }
+
     public User getConnectedUser() {
         User user = null;
         SQLiteDatabase db = getReadableDatabase();

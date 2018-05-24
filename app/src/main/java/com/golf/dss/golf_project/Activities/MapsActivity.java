@@ -1,6 +1,8 @@
 package com.golf.dss.golf_project.Activities;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -357,6 +359,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() { //Listener for click on an item of the menu
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    if(item.getTitle().toString().toLowerCase().equals("my information")){
+                        Intent userData = new Intent(getApplicationContext(), UserDataActivity.class); //Create new activity
+                        userData.putExtra("modify", "true"); //Say to the activity that the user want to modify his information
+                        getApplicationContext().startActivity(userData); //Start new activity
+                    }
                     Toast.makeText(getApplicationContext(), "You click on "+item.getTitle(), Toast.LENGTH_LONG).show();
                     return true;
                 }
