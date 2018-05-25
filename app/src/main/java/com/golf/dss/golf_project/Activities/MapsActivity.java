@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
+import com.golf.dss.golf_project.Classes.Club;
 import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
 import com.golf.dss.golf_project.R;
@@ -46,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by User on 10/2/2017.
@@ -323,34 +325,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onClick(View v) {
         if(v.getId() == btnValidateShoot.getId()){
-            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-            try{
-                if(mLocationPermissionsGranted){
-
-                    final Task location = mFusedLocationProviderClient.getLastLocation();
-                    location.addOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(@NonNull Task task) {
-                            if(task.isSuccessful()){
-                                Location currentLocation = (Location) task.getResult();
-                                Location dest = new Location("aimLocation");
-                                dest.setLatitude(aimLocation.latitude);
-                                dest.setLongitude(aimLocation.longitude);
-                                float distance = currentLocation.distanceTo(dest);
-
-                                MapTools.getPointElevation(getApplicationContext(), dest.getLatitude(), dest.getLongitude());
-                                String destElevation = String.valueOf((int) aimElevation);
-                                Toast.makeText(getApplicationContext(), destElevation +" meters", Toast.LENGTH_LONG).show();
-                            }else{
-                                Log.d(TAG, "onComplete: current location is null");
-                                Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }catch (SecurityException e){
-                Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
-            }
+            MapTools.getAdviceClub(getApplicationContext(), aimLocation);
         }
 
         if(v.getId() == this.ivSettings.getId()){
