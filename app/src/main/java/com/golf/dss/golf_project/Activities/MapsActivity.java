@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
-import com.golf.dss.golf_project.Classes.Club;
 import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
 import com.golf.dss.golf_project.R;
@@ -49,7 +48,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by User on 10/2/2017.
@@ -104,12 +102,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.tvNbShoots = findViewById(R.id.tvNbShoots);
         this.ivSettings = findViewById(R.id.ivSettings);
         this.ivUserPic = findViewById(R.id.ivUserPic);
-        this.tvElevation = findViewById(R.id.tvElevation);
 
         //Fill textview
         this.tvUserName.setText(user.getFirstname());
         this.tvUserLevel.setText("Level : "+user.getLevel().toLowerCase());
-        if(user.getGender().toLowerCase() == "female"){
+        if(user.getGender().toLowerCase().equals("female")){
             this.ivUserPic.setImageResource(R.mipmap.ic_user_woman);
         }
 
@@ -247,9 +244,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-                            int elevation = (int) currentLocation.getAltitude();
-
-                            tvElevation.setText(String.valueOf(elevation) +"m");
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
 
