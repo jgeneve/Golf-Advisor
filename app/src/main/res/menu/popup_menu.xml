@@ -1,15 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuSettings"
-        android:title="Settings" />
+        android:id="@+id/menuClubs"
+        android:title="My clubs" />
+
+    <item
+        android:id="@+id/menuInformation"
+        android:title="My information" />
 
     <item
         android:id="@+id/menuHelp"
         android:title="Help" />
-
-    <item
-        android:id="@+id/menuAbout"
-        android:title="About" />
 
 </menu>

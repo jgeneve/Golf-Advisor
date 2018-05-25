@@ -57,13 +57,9 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
                 e.printStackTrace();
             }
         }
+
         //Create or open database
         this.db = GolfDatabase.getInstance(this);
-        //If the user already get an account -> Skip to the map
-        if (this.db.getConnectedUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-            this.finish(); //Close this activity
-        }
 
         //Components
         this.rbGender = findViewById(R.id.rbGender);
@@ -80,38 +76,60 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
         this.btnSaveUserData = findViewById(R.id.btnSaveUserData);
 
         //All adapters for spinners
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.age_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerAge.setAdapter(adapter);
+        ArrayAdapter adapterAge = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.age_array));
+        adapterAge.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAge.setAdapter(adapterAge);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.height_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerHeight.setAdapter(adapter);
+        ArrayAdapter adapterHeight = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.height_array));
+        adapterHeight.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerHeight.setAdapter(adapterHeight);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.weight_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerWeight.setAdapter(adapter);
+        ArrayAdapter adapterWeight = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.weight_array));
+        adapterWeight.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerWeight.setAdapter(adapterWeight);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.level_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLevel.setAdapter(adapter);
+        ArrayAdapter adapterLevel = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.level_array));
+        adapterLevel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLevel.setAdapter(adapterLevel);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.stylePlay_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStyle.setAdapter(adapter);
+        ArrayAdapter adapterStyle = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.stylePlay_array));
+        adapterStyle.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStyle.setAdapter(adapterStyle);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.trainingFrequency_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerFrequency.setAdapter(adapter);
+        ArrayAdapter adapterFrequency = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.trainingFrequency_array));
+        adapterFrequency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFrequency.setAdapter(adapterFrequency);
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.experienceTime_array));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerExpTime.setAdapter(adapter);
+        ArrayAdapter adapterExpTime = new ArrayAdapter(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.experienceTime_array));
+        adapterExpTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerExpTime.setAdapter(adapterExpTime);
 
         //Listeners
         this.rbGender.setOnClickListener(this);
         this.btnSaveUserData.setOnClickListener(this);
 
+        if (getIntent().getStringExtra("modify") != null){
+            //If the user wants to modify his data
+            User user = this.db.getConnectedUser();
+            etFirstname.setText(user.getFirstname()); //Fill firstname
+            if(user.getGender().toLowerCase() == "male"){ //Select gender
+                rbMale.setSelected(true);
+                rbFemale.setSelected(false);
+            }else{
+                rbFemale.setSelected(true);
+                rbMale.setSelected(false);
+            }
+            spinnerAge.setSelectedIndex(adapterAge.getPosition(user.getAge()));
+            spinnerHeight.setSelectedIndex(adapterHeight.getPosition(user.getHeight()));
+            spinnerWeight.setSelectedIndex(adapterWeight.getPosition(user.getWeight()));
+            spinnerLevel.setSelectedIndex(adapterLevel.getPosition(user.getLevel()));
+            spinnerStyle.setSelectedIndex(adapterStyle.getPosition(user.getStyle()));
+            spinnerFrequency.setSelectedIndex(adapterFrequency.getPosition(user.getFrequency()));
+            spinnerExpTime.setSelectedIndex(adapterExpTime.getPosition(user.getExpTime()));
+        }else if (this.db.getConnectedUser() != null) { //If the user already get an account -> Skip to the map
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+            this.finish(); //Close this activity
+        }
     }
 
     @Override
@@ -128,7 +146,7 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
             User user = new User(
                     etFirstname.getText().toString(),
                     spinnerAge.getText().toString(),
-                    selectedRadioButton.getText().toString(),
+                    selectedRadioButton.getText().toString(), //TODO Female - Male not working
                     spinnerHeight.getText().toString(),
                     spinnerWeight.getText().toString(),
                     spinnerLevel.getText().toString(),
@@ -136,11 +154,19 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
                     spinnerFrequency.getText().toString(),
                     spinnerExpTime.getText().toString()
             );
-            db.deleteAllData();
-            db.insertConnectedUser(user);
-            db.insertDefaultClubs();
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-            finish(); //Close this activity
+            if (getIntent().getStringExtra("modify") != null){
+                db.deleteConnectedUser();
+                db.insertConnectedUser(user);
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                finish(); //Close this activity
+            }else{
+                db.deleteAllData();
+                db.insertConnectedUser(user);
+                db.insertDefaultClubs();
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                finish(); //Close this activity
+            }
+
 
         }
     }

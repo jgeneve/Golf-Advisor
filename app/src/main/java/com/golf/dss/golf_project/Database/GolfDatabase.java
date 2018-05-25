@@ -45,6 +45,8 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private static final String CLUB_WOMEN_MIN_DISTANCE = "WOMEN_MIN_DISTANCE";
     private static final String CLUB_WOMEN_MAX_DISTANCE = "WOMEN_MAX_DISTANCE";
     private static final String CLUB_WOMEN_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
+    private static final String CLUB_USER_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
+    private static final String CLUB_USER_NB_USE = "WOMEN_AVG_DISTANCE";
 
     //Creation string
     //=> USER
@@ -69,7 +71,9 @@ public class GolfDatabase extends SQLiteOpenHelper{
             + CLUB_MEN_AVG_DISTANCE + " integer not null,"
             + CLUB_WOMEN_MIN_DISTANCE + " integer not null,"
             + CLUB_WOMEN_MAX_DISTANCE + " integer not null,"
-            + CLUB_WOMEN_AVG_DISTANCE + " integer not null"
+            + CLUB_WOMEN_AVG_DISTANCE + " integer not null,"
+            + CLUB_USER_AVG_DISTANCE + " integer not null,"
+            + CLUB_USER_NB_USE + " integer not null"
             + ");";
 
     private static GolfDatabase mInstance;
@@ -135,6 +139,11 @@ public class GolfDatabase extends SQLiteOpenHelper{
         values.put(USER_TRAINING_FREQUENCY, user.getFrequency());
         values.put(USER_EXPERIENCE_TIME, user.getExpTime());
         db.insert(USER_TABLE_NAME, null, values);
+    }
+
+    public void deleteConnectedUser() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(USER_TABLE_NAME, null, null);
     }
 
     public User getConnectedUser() {
