@@ -112,12 +112,12 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
             //If the user wants to modify his data
             User user = this.db.getConnectedUser();
             etFirstname.setText(user.getFirstname()); //Fill firstname
-            if(user.getGender().toLowerCase() == "male"){ //Select gender
-                rbMale.setSelected(true);
-                rbFemale.setSelected(false);
+            if(user.getGender().toLowerCase().equals("male")){ //Select gender
+                rbMale.setChecked(true);
+                rbFemale.setChecked(false);
             }else{
-                rbFemale.setSelected(true);
-                rbMale.setSelected(false);
+                rbFemale.setChecked(true);
+                rbMale.setChecked(false);
             }
             spinnerAge.setSelectedIndex(adapterAge.getPosition(user.getAge()));
             spinnerHeight.setSelectedIndex(adapterHeight.getPosition(user.getHeight()));
@@ -142,29 +142,33 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
                 this.rbMale.setSelected(false);
             }
         } else if (v.getId() == this.btnSaveUserData.getId()) { //Click on button save
-            RadioButton selectedRadioButton = findViewById(rbGender.getCheckedRadioButtonId());
-            User user = new User(
-                    etFirstname.getText().toString(),
-                    spinnerAge.getText().toString(),
-                    selectedRadioButton.getText().toString(), //TODO Female - Male not working
-                    spinnerHeight.getText().toString(),
-                    spinnerWeight.getText().toString(),
-                    spinnerLevel.getText().toString(),
-                    spinnerStyle.getText().toString(),
-                    spinnerFrequency.getText().toString(),
-                    spinnerExpTime.getText().toString()
-            );
-            if (getIntent().getStringExtra("modify") != null){
-                db.deleteConnectedUser();
-                db.insertConnectedUser(user);
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-                finish(); //Close this activity
+            if(etFirstname.getText() != null){
+                RadioButton selectedRadioButton = findViewById(rbGender.getCheckedRadioButtonId());
+                User user = new User(
+                        etFirstname.getText().toString(),
+                        spinnerAge.getText().toString(),
+                        selectedRadioButton.getText().toString(),
+                        spinnerHeight.getText().toString(),
+                        spinnerWeight.getText().toString(),
+                        spinnerLevel.getText().toString(),
+                        spinnerStyle.getText().toString(),
+                        spinnerFrequency.getText().toString(),
+                        spinnerExpTime.getText().toString()
+                );
+                if (getIntent().getStringExtra("modify") != null){
+                    db.deleteConnectedUser();
+                    db.insertConnectedUser(user);
+                    startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                    finish(); //Close this activity
+                }else{
+                    db.deleteAllData();
+                    db.insertConnectedUser(user);
+                    db.insertDefaultClubs();
+                    startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
+                    finish(); //Close this activity
+                }
             }else{
-                db.deleteAllData();
-                db.insertConnectedUser(user);
-                db.insertDefaultClubs();
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
-                finish(); //Close this activity
+                etFirstname.setError("Please enter your firstname");
             }
 
 
