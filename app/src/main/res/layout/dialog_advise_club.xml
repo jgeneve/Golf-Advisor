@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="350dp"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@drawable/custombordergreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/dialogIvWind"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/textViewWind"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_wind_black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wind: "
+            style="@style/dialogText"/>
+
+        <TextView
+            android:id="@+id/dialogWindSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Direction + - m/s"
+            style="@style/dialogText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/dialogIvElevation"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/textViewWind"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_elevation_black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elevation to the aiming point: "
+            style="@style/dialogText"/>
+
+        <TextView
+            android:id="@+id/dialogElevation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+- m"
+            style="@style/dialogText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/dialogImageClub"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/textViewWind"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_shoot" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommanded club to use: "
+            style="@style/dialogText"/>
+
+        <TextView
+            android:id="@+id/dialogClubName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="driver"
+            style="@style/dialogText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/dialogbBnValidateShoot"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:background="@drawable/button_circle_green"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
+                android:src="@mipmap/ic_shoot"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shoot"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

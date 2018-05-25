@@ -80,7 +80,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="120dp"
             android:orientation="vertical">
 
@@ -96,7 +96,7 @@
                     android:layout_above="@+id/textViewWind"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="5dp"
-                    app:srcCompat="@mipmap/ic_wind" />
+                    app:srcCompat="@mipmap/ic_wind_white" />
 
                 <TextView
                     android:id="@+id/textViewWindDirection"
@@ -117,31 +117,6 @@
                     android:layout_gravity="center"
                     android:text="10m/s"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="15dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageViewElevation"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_above="@+id/textViewWind"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="5dp"
-                    app:srcCompat="@mipmap/ic_elevation" />
-
-                <TextView
-                    android:id="@+id/tvElevation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:text="- m"
                     android:textColor="@color/white"
                     android:textSize="15dp" />
             </LinearLayout>
