@@ -3,15 +3,19 @@ package com.golf.dss.golf_project.Database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
 import com.golf.dss.golf_project.Classes.Club;
+import com.golf.dss.golf_project.Classes.Shot;
 import com.golf.dss.golf_project.Classes.User;
 
 import java.util.ArrayList;
+
+import static java.lang.Math.abs;
 
 public class GolfDatabase extends SQLiteOpenHelper{
 
@@ -23,10 +27,11 @@ public class GolfDatabase extends SQLiteOpenHelper{
     //Tables name
     private static final String USER_TABLE_NAME = "USER";
     private static final String CLUB_TABLE_NAME = "CLUB";
+    private static final String SHOT_TABLE_NAME = "SHOT";
 
     //Tables columns names
     //=> USER
-    private static final String USER_ID = "ID";
+    private static final String USER_ID = "USER_ID";
     private static final String USER_FIRSTNAME = "FIRSTNAME";
     private static final String USER_AGE = "AGE";
     private static final String USER_GENDER = "GENDER";
@@ -37,7 +42,7 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private static final String USER_TRAINING_FREQUENCY = "TRAINING_FREQUENCY";
     private static final String USER_EXPERIENCE_TIME = "EXPERIENCE_TIME";
     //=> CLUB
-    private static final String CLUB_ID = "ID";
+    private static final String CLUB_ID = "CLUB_ID";
     private static final String CLUB_NAME = "NAME";
     private static final String CLUB_MEN_MIN_DISTANCE = "MEN_MIN_DISTANCE";
     private static final String CLUB_MEN_MAX_DISTANCE = "MEN_MAX_DISTANCE";
@@ -45,8 +50,14 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private static final String CLUB_WOMEN_MIN_DISTANCE = "WOMEN_MIN_DISTANCE";
     private static final String CLUB_WOMEN_MAX_DISTANCE = "WOMEN_MAX_DISTANCE";
     private static final String CLUB_WOMEN_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
-    private static final String CLUB_USER_AVG_DISTANCE = "USER_AVG_DISTANCE";
-    private static final String CLUB_USER_NB_USE = "USER_NB_USE";
+    //=> CLUB
+    private static final String SHOT_ID = "SHOT_ID";
+    private static final String SHOT_LAT_BEGIN = "LAT_BEGIN";
+    private static final String SHOT_LONG_BEGIN = "LONG_BEGIN";
+    private static final String SHOT_LAT_END = "LAT_END";
+    private static final String SHOT_LONG_END = "LONG_END";
+    private static final String SHOT_DISTANCE = "DISTANCE";
+
 
     //Creation string
     //=> USER
@@ -71,19 +82,27 @@ public class GolfDatabase extends SQLiteOpenHelper{
             + CLUB_MEN_AVG_DISTANCE + " integer not null,"
             + CLUB_WOMEN_MIN_DISTANCE + " integer not null,"
             + CLUB_WOMEN_MAX_DISTANCE + " integer not null,"
-            + CLUB_WOMEN_AVG_DISTANCE + " integer not null,"
-            + CLUB_USER_AVG_DISTANCE + " integer not null default 0,"
-            + CLUB_USER_NB_USE + " integer not null default 0"
+            + CLUB_WOMEN_AVG_DISTANCE + " integer not null"
+            + ");";
+    //=> SHOT
+    private static final String DATABASE_CREATE_SHOT = "CREATE TABLE " + SHOT_TABLE_NAME + "("
+            + SHOT_ID + " integer primary key autoincrement,"
+            + CLUB_ID + " integer,"
+            + SHOT_LAT_BEGIN + " real not null,"
+            + SHOT_LONG_BEGIN + " real not null,"
+            + SHOT_LAT_END + " real not null,"
+            + SHOT_LONG_END + " real not null,"
+            + SHOT_DISTANCE + " real not null"
             + ");";
 
     private static GolfDatabase mInstance;
     private String[] allColumnsUser;
     private String[] allColumnsClub;
+    private String[] allColumnsShot;
 
     static {
         mInstance = null;
     }
-
 
     private GolfDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -108,12 +127,23 @@ public class GolfDatabase extends SQLiteOpenHelper{
                 CLUB_WOMEN_MAX_DISTANCE,
                 CLUB_WOMEN_AVG_DISTANCE
         };
+
+        this.allColumnsShot = new String[] {
+                SHOT_ID,
+                CLUB_ID,
+                SHOT_LAT_BEGIN,
+                SHOT_LONG_BEGIN,
+                SHOT_LAT_END,
+                SHOT_LONG_END,
+                SHOT_DISTANCE
+        };
     }
 
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE_USER);
         database.execSQL(DATABASE_CREATE_CLUB);
+        database.execSQL(DATABASE_CREATE_SHOT);
     }
 
     @Override
@@ -121,6 +151,7 @@ public class GolfDatabase extends SQLiteOpenHelper{
         Log.w(GolfDatabase.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         database.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         database.execSQL("DROP TABLE IF EXISTS " + CLUB_TABLE_NAME);
+        database.execSQL("DROP TABLE IF EXISTS " + SHOT_TABLE_NAME);
         onCreate(database);
     }
 
@@ -208,6 +239,56 @@ public class GolfDatabase extends SQLiteOpenHelper{
             values.put(CLUB_WOMEN_MAX_DISTANCE, myClub.getWomenMaxDistance());
             db.insert(CLUB_TABLE_NAME, null, values);
         }
+    }
+
+    public Club getAdviseClub(int shootDistance){
+
+        SQLiteDatabase db = getReadableDatabase();
+        User user = this.getConnectedUser();
+        String gender_club;
+        if(user.getGender().toLowerCase().equals("male")){
+            gender_club = this.CLUB_MEN_AVG_DISTANCE;
+        }else{
+            gender_club = this.CLUB_WOMEN_AVG_DISTANCE;
+        }
+
+        Cursor cursor = db.query(true,
+                CLUB_TABLE_NAME,
+                new String[]{this.CLUB_ID, this.CLUB_NAME},
+                gender_club+">"+shootDistance +" AND "+this.CLUB_NAME+ " <> 'SW' AND "+this.CLUB_NAME+ " <> 'Driver'",
+                null,
+                null,
+                null,
+                "ABS("+gender_club+"-"+shootDistance+")",
+                "1");
+        cursor.moveToFirst();
+        String clubName = null;
+        int clubId = -1;
+        if (cursor.getCount() > 0) {
+            clubId = cursor.getInt(0);
+            clubName = cursor.getString(1);
+        }
+        cursor.close();
+        Club club = new Club(clubId, clubName);
+        return club;
+    }
+
+    /*------------------------------------------------------ SHOT METHODS ------------------------------------------------------*/
+    public void insertShot(Shot shot, int id_club){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CLUB_ID, id_club);
+        values.put(SHOT_LAT_BEGIN, shot.getLat_begin());
+        values.put(SHOT_LONG_BEGIN, shot.getLong_begin());
+        values.put(SHOT_LAT_END, shot.getLat_end());
+        values.put(SHOT_LONG_END, shot.getLong_end());
+        values.put(SHOT_DISTANCE, shot.getDistance());
+        db.insert(SHOT_TABLE_NAME, null, values);
+    }
+
+    public long countShotsClub(int id_club){
+        SQLiteDatabase db = getReadableDatabase();
+        return DatabaseUtils.queryNumEntries(db, SHOT_TABLE_NAME, CLUB_ID+" = "+id_club);
     }
 
     /*------------------------------------------------------ TOOL METHODS ------------------------------------------------------*/

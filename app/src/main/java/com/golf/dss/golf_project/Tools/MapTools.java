@@ -166,11 +166,13 @@ public class MapTools {
                                     playerRatio *= 0.95;
                                 }
 
+                                Double finalShootDistance = shootingDistance*playerRatio;
+                                Club adviseClub = db.getAdviseClub(finalShootDistance.intValue());
                                 //Display the window of the final advise
                                 CustomDialogMessage c = new CustomDialogMessage();
-                                c.dialogClubAdvise(context, windDirection, windSpeed, shootingElevation, "CLUB NAME");
+                                c.dialogClubAdvise(context, shootingDistance, windDirection, windSpeed, shootingElevation, adviseClub, currentLocation);
 
-                                Toast.makeText(context, "Distance: " + (shootingDistance+elevationBonus) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Distance: " + (shootingDistance*playerRatio) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -9,7 +9,34 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/textViewWind"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:src="@mipmap/ic_distance" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance: "
+            style="@style/dialogText"/>
+
+        <TextView
+            android:id="@+id/dialogDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="- yards"
+            style="@style/dialogText"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
         <ImageView
             android:id="@+id/dialogIvWind"
             android:layout_width="30dp"
@@ -35,7 +62,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
         <ImageView
             android:id="@+id/dialogIvElevation"
             android:layout_width="30dp"
@@ -61,7 +89,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
         <ImageView
             android:id="@+id/dialogImageClub"
             android:layout_width="30dp"
@@ -69,12 +98,12 @@
             android:layout_above="@+id/textViewWind"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="5dp"
-            android:src="@mipmap/ic_shoot" />
+            android:src="@mipmap/ic_club" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recommanded club to use: "
+            android:text="Recommended club: "
             style="@style/dialogText"/>
 
         <TextView
