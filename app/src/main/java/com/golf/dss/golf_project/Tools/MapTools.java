@@ -91,9 +91,9 @@ public class MapTools {
 
                                 // ============== AGE ==============
                                 if (user.getAge().equals(ageArr[0])){ // < 11
-                                    playerRatio *= 0.75;
+                                    playerRatio *= 1.25;
                                 } else if (user.getAge().equals(ageArr[1])){ // 11-15
-                                    playerRatio *= 0.85;
+                                    playerRatio *= 1.15;
                                 } else if (user.getAge().equals(ageArr[2])){ // 16-29
                                     playerRatio *= 1.01;
                                 } else if (user.getAge().equals(ageArr[3])){ // 30-40
@@ -104,73 +104,66 @@ public class MapTools {
 
                                 // ============== HEIGHT ==============
                                 if (user.getHeight().equals(heightArr[0])){ // < 150
-                                    playerRatio *= 0.95;
+                                    playerRatio *= 1.05;
                                 } else if (user.getHeight().equals(heightArr[1])){ // 151-170
-                                    playerRatio *= 0.97;
+                                    playerRatio *= 1.03;
                                 } else if (user.getHeight().equals(heightArr[2])){ // 171-190
                                     playerRatio *= 1;
                                 } else if (user.getHeight().equals(heightArr[3])){ // > 191
-                                    playerRatio *= 1.02;
+                                    playerRatio *= 0.98;
                                 }
 
                                 // ============== WEIGHT ==============
                                 if (user.getWeight().equals(weightArr[0])){ // < 50
-                                    playerRatio *= 0.95;
+                                    playerRatio *= 1.05;
                                 } else if (user.getWeight().equals(weightArr[1])){ // 51-70
-                                    playerRatio *= 0.97;
+                                    playerRatio *= 1.03;
                                 } else if (user.getWeight().equals(weightArr[2])){ // 71-90
                                     playerRatio *= 1;
                                 } else if (user.getWeight().equals(weightArr[3])){ // > 91
-                                    playerRatio *= 1.02;
+                                    playerRatio *= 0.98;
                                 }
 
                                 // ============== LEVEL ==============
                                 if (user.getLevel().equals(levelArr[0])){ // beginner
-                                    playerRatio *= 0.9;
+                                    playerRatio *= 1.08;
                                 } else if (user.getLevel().equals(levelArr[1])){ // average
-                                    playerRatio *= 0.97;
+                                    playerRatio *= 1.03;
                                 } else if (user.getLevel().equals(levelArr[2])){ // good
                                     playerRatio *= 1;
                                 } else if (user.getLevel().equals(levelArr[3])){ // expert
-                                    playerRatio *= 1.05;
+                                    playerRatio *= 0.95;
                                 }
 
                                 // ============== PLAYING FOR ==============
                                 if (user.getStyle().equals(stylePlayArr[0])){ // FOR FUN
-                                    playerRatio *= 0.975;
+                                    playerRatio *= 1.05;
                                 } else if (user.getStyle().equals(stylePlayArr[1])){ // TRAINING
                                     playerRatio *= 1;
                                 } else if (user.getStyle().equals(stylePlayArr[2])){ // COMPETITION
-                                    playerRatio *= 1.025;
+                                    playerRatio *= 0.95;
                                 }
 
                                 // ============== TRAINING FREQUENCY ==============
                                 if (user.getFrequency().equals(trainingFreqArr[0])){ // DAILY
-                                    playerRatio *= 1.025;
+                                    playerRatio *= 0.93;
                                 } else if (user.getFrequency().equals(trainingFreqArr[1])){ // WEEKLY
-                                    playerRatio *= 1.0125;
+                                    playerRatio *= 0.95;
                                 } else if (user.getFrequency().equals(trainingFreqArr[2])){ // MONTHKY
                                     playerRatio *= 1;
                                 } else if (user.getFrequency().equals(trainingFreqArr[3])){ // OCCASIONALLY
-                                    playerRatio *= 0.975;
+                                    playerRatio *= 1.1;
                                 }
 
                                 // ============== EXP TIME ==============
                                 if (user.getExpTime().equals(expTimeArr[0])){ // < 2 years
-                                    playerRatio *= 0.95;
+                                    playerRatio *= 1.05;
                                 } else if (user.getExpTime().equals(expTimeArr[1])){ // < 5 years
                                     playerRatio *= 1;
                                 } else if (user.getExpTime().equals(expTimeArr[2])){ // < 10 years
-                                    playerRatio *= 1.025;
+                                    playerRatio *= 0.97;
                                 } else if (user.getExpTime().equals(expTimeArr[3])){ // > 10 years
-                                    playerRatio *= 1.05;
-                                }
-
-                                // ============== GENDER ==============
-                                if (user.getGender().equals("Male")){
-
-                                } else if (user.getGender().equals("Female")){
-
+                                    playerRatio *= 0.95;
                                 }
 
                                 //Display the window of the final advise
