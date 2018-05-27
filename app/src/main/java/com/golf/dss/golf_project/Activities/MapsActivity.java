@@ -341,6 +341,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Intent userData = new Intent(getApplicationContext(), UserDataActivity.class); //Create new activity
                         userData.putExtra("modify", "true"); //Say to the activity that the user want to modify his information
                         getApplicationContext().startActivity(userData); //Start new activity
+                        finish();
                     }
                     Toast.makeText(getApplicationContext(), "You click on "+item.getTitle(), Toast.LENGTH_LONG).show();
                     return true;
