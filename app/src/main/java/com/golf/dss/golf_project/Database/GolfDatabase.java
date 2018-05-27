@@ -72,8 +72,8 @@ public class GolfDatabase extends SQLiteOpenHelper{
             + CLUB_WOMEN_MIN_DISTANCE + " integer not null,"
             + CLUB_WOMEN_MAX_DISTANCE + " integer not null,"
             + CLUB_WOMEN_AVG_DISTANCE + " integer not null,"
-            + CLUB_USER_AVG_DISTANCE + " integer not null,"
-            + CLUB_USER_NB_USE + " integer not null"
+            + CLUB_USER_AVG_DISTANCE + " integer not null default 0,"
+            + CLUB_USER_NB_USE + " integer not null default 0"
             + ");";
 
     private static GolfDatabase mInstance;
