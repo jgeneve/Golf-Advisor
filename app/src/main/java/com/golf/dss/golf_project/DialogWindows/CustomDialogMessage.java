@@ -13,12 +13,20 @@ import com.golf.dss.golf_project.R;
 
 public class CustomDialogMessage {
 
-    public void dialogClubAdvise(final Context context) {
+    public void dialogClubAdvise(final Context context, String windDirection, String windSpeed, int elevation, String clubName) {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(1);
         dialog.setContentView(R.layout.dialog_advise_club);
 
         ImageButton dialogbBnValidateShoot = dialog.findViewById(R.id.dialogbBnValidateShoot);
+        TextView dialogWindSpeed = dialog.findViewById(R.id.dialogWindSpeed);
+        TextView dialogElevation = dialog.findViewById(R.id.dialogElevation);
+        TextView dialogClubName = dialog.findViewById(R.id.dialogClubName);
+
+        dialogWindSpeed.setText(windDirection+" - "+ windSpeed+" m/s");
+        dialogElevation.setText(String.valueOf(elevation)+" m");
+        dialogClubName.setText(clubName);
+
         dialogbBnValidateShoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

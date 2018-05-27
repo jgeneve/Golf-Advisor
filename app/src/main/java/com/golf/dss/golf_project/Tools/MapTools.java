@@ -15,6 +15,7 @@ import com.golf.dss.golf_project.AsyncTask.AsyncTaskElevation;
 import com.golf.dss.golf_project.Classes.Club;
 import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
+import com.golf.dss.golf_project.DialogWindows.CustomDialogMessage;
 import com.golf.dss.golf_project.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,7 +40,7 @@ public class MapTools {
 
     }
 
-    public static void getAdviceClub(final Context context, final LatLng aimLocation) {
+    public static void getAdviceClub(final Context context, final LatLng aimLocation, final String windDirection, final String windSpeed) {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         @SuppressLint("MissingPermission") final Task location = mFusedLocationProviderClient.getLastLocation();
         location.addOnCompleteListener(new OnCompleteListener() {
@@ -171,6 +172,10 @@ public class MapTools {
                                 } else if (user.getGender().equals("Female")){
 
                                 }
+
+                                //Display the window of the final advise
+                                CustomDialogMessage c = new CustomDialogMessage();
+                                c.dialogClubAdvise(context, windDirection, windSpeed, shootingElevation, "CLUB NAME");
 
                                 Toast.makeText(context, "Distance: " + (shootingDistance+elevationBonus) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {

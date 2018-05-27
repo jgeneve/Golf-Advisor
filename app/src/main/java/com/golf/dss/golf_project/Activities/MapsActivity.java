@@ -81,6 +81,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng aimLocation;
     public static double aimElevation;
     private JSONObject jsonWeather;
+    String windSpeed;
+    String windDirection;
 
 
 
@@ -153,8 +155,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         try {
                                             jsonWeather = new JSONObject(str);
                                             JSONObject windObj = jsonWeather.getJSONObject("wind");
-                                            String windSpeed = windObj.getString("speed");
-                                            String windDirection =  MapTools.getWindDirection(windObj.getInt("deg"));
+                                            windSpeed = windObj.getString("speed");
+                                            windDirection =  MapTools.getWindDirection(windObj.getInt("deg"));
                                             textViewWind.setText(windSpeed + "m/s");
                                             textViewWindDirection.setText(windDirection+" - ");
                                         } catch (JSONException e) {
@@ -245,8 +247,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM);
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -322,9 +323,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onClick(View v) {
         if(v.getId() == btnValidateShoot.getId()){
-            CustomDialogMessage c = new CustomDialogMessage();
-            c.dialogClubAdvise(this);
-            MapTools.getAdviceClub(getApplicationContext(), aimLocation);
+            if(aimLocation != null){
+                MapTools.getAdviceClub(MapsActivity.this, aimLocation, windDirection, windSpeed);
+            }else{
+                Toast.makeText(this, "Please click where you want to aim before validate", Toast.LENGTH_LONG).show();
+            }
         }
 
         if(v.getId() == this.ivSettings.getId()){

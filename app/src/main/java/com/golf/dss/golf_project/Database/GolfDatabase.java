@@ -45,8 +45,8 @@ public class GolfDatabase extends SQLiteOpenHelper{
     private static final String CLUB_WOMEN_MIN_DISTANCE = "WOMEN_MIN_DISTANCE";
     private static final String CLUB_WOMEN_MAX_DISTANCE = "WOMEN_MAX_DISTANCE";
     private static final String CLUB_WOMEN_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
-    private static final String CLUB_USER_AVG_DISTANCE = "WOMEN_AVG_DISTANCE";
-    private static final String CLUB_USER_NB_USE = "WOMEN_AVG_DISTANCE";
+    private static final String CLUB_USER_AVG_DISTANCE = "USER_AVG_DISTANCE";
+    private static final String CLUB_USER_NB_USE = "USER_NB_USE";
 
     //Creation string
     //=> USER
