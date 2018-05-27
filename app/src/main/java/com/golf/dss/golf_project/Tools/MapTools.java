@@ -88,13 +88,6 @@ public class MapTools {
                                 float altitudeBonus = (float) (currentLocation.getAltitude() * shootingDistance / (100 * 152.4));
                                 double playerRatio = 1.0;
 
-                                // ============== GENDER ==============
-                                if (user.getGender() == "Male"){
-
-                                } else if (user.getGender() == "Female"){
-
-                                }
-
                                 // ============== AGE ==============
                                 if (user.getAge().equals(ageArr[0])){ // < 11
                                     playerRatio *= 0.75;
@@ -170,6 +163,13 @@ public class MapTools {
                                     playerRatio *= 1.025;
                                 } else if (user.getExpTime().equals(expTimeArr[3])){ // > 10 years
                                     playerRatio *= 1.05;
+                                }
+
+                                // ============== GENDER ==============
+                                if (user.getGender().equals("Male")){
+
+                                } else if (user.getGender().equals("Female")){
+
                                 }
 
                                 Toast.makeText(context, "Distance: " + (shootingDistance+elevationBonus) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
