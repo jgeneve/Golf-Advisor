@@ -1,6 +1,7 @@
 package com.golf.dss.golf_project.Activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -83,17 +84,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private JSONObject jsonWeather;
     String windSpeed;
     String windDirection;
-
-
+    public static Activity mapsActivity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         getLocationPermission();
+        mapsActivity = this;
 
         this.db = GolfDatabase.getInstance(this);
         User user = this.db.getConnectedUser();
+
+        //Get shared preferences nb shots
+        SharedPreferences prefs = getSharedPreferences("SHOTS", 0);
+        int nbShots = prefs.getInt("nbShots", 0);
+
         //Find elements
         this.aimElevation = 0.0;
         this.btnValidateShoot = findViewById(R.id.btnValidateShoot);
@@ -109,14 +116,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Fill textview
         this.tvUserName.setText(user.getFirstname());
         this.tvUserLevel.setText("Level : "+user.getLevel().toLowerCase());
+        tvNbShoots.setText(String.valueOf(nbShots));
         if(user.getGender().toLowerCase().equals("female")){
             this.ivUserPic.setImageResource(R.mipmap.ic_user_woman);
         }
 
-
         //Set listeners
         btnValidateShoot.setOnClickListener(this);
         this.ivSettings.setOnClickListener(this);
+
     }
 
     @Override
@@ -341,7 +349,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Intent userData = new Intent(getApplicationContext(), UserDataActivity.class); //Create new activity
                         userData.putExtra("modify", "true"); //Say to the activity that the user want to modify his information
                         getApplicationContext().startActivity(userData); //Start new activity
-                        finish();
                     }
                     Toast.makeText(getApplicationContext(), "You click on "+item.getTitle(), Toast.LENGTH_LONG).show();
                     return true;

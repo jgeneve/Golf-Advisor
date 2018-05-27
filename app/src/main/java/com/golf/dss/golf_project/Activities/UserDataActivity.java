@@ -2,6 +2,7 @@ package com.golf.dss.golf_project.Activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -158,9 +159,15 @@ public class UserDataActivity extends AppCompatActivity implements OnClickListen
                 if (getIntent().getStringExtra("modify") != null){
                     db.deleteConnectedUser();
                     db.insertConnectedUser(user);
+                    MapsActivity.mapsActivity.finish(); //Close the old map activity
                     startActivity(new Intent(getApplicationContext(), MapsActivity.class)); //Start new activity
                     finish(); //Close this activity
                 }else{
+                    SharedPreferences settings = getSharedPreferences("SHOTS", 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt("nbShots", 0);
+                    editor.commit();
+
                     db.deleteAllData();
                     db.insertConnectedUser(user);
                     db.insertDefaultClubs();

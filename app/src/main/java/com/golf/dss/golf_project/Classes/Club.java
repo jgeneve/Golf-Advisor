@@ -1,6 +1,7 @@
 package com.golf.dss.golf_project.Classes;
 
 public class Club {
+    private int id;
     private String name;
     private int menMinDistance;
     private int menMaxDistance;
@@ -9,7 +10,12 @@ public class Club {
     private int womenMaxDistance;
     private int womenAvgDistance;
 
-    public Club(String name, int menMinDistance,int menAvgDistance, int menMaxDistance, int womenMinDistance, int womenAvgDistance, int womenMaxDistance) {
+    public Club(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Club(String name, int menMinDistance, int menAvgDistance, int menMaxDistance, int womenMinDistance, int womenAvgDistance, int womenMaxDistance) {
         this.name = name;
         this.menMinDistance = menMinDistance;
         this.menMaxDistance = menMaxDistance;
@@ -17,6 +23,14 @@ public class Club {
         this.womenMinDistance = womenMinDistance;
         this.womenMaxDistance = womenMaxDistance;
         this.womenAvgDistance = womenAvgDistance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
