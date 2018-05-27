@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.golf.dss.golf_project.AsyncTask.AsyncTaskWeather;
 import com.golf.dss.golf_project.Classes.User;
 import com.golf.dss.golf_project.Database.GolfDatabase;
+import com.golf.dss.golf_project.DialogWindows.CustomDialogMessage;
 import com.golf.dss.golf_project.R;
 import com.golf.dss.golf_project.Tools.OnCompleteListenerAsync;
 import com.golf.dss.golf_project.Tools.MapTools;
@@ -321,6 +322,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onClick(View v) {
         if(v.getId() == btnValidateShoot.getId()){
+            CustomDialogMessage c = new CustomDialogMessage();
+            c.dialogClubAdvise(this);
             MapTools.getAdviceClub(getApplicationContext(), aimLocation);
         }
 
