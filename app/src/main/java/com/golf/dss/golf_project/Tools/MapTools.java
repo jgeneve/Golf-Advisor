@@ -47,6 +47,7 @@ public class MapTools {
             public void onComplete(@NonNull Task task) {
                 if(task.isSuccessful()){
                     final Location currentLocation = (Location) task.getResult();
+                    currentLocation.setAltitude(currentLocation.getAltitude()*0.3048); // Convert to metters
                     final Location destLocation = new Location("aimLocation");
                     destLocation.setLatitude(aimLocation.latitude);
                     destLocation.setLongitude(aimLocation.longitude);
@@ -72,6 +73,7 @@ public class MapTools {
 
                                 GolfDatabase db = GolfDatabase.getInstance(context);
                                 User user = db.getConnectedUser();
+
                                 String[] ageArr = context.getResources().getStringArray(R.array.age_array);
                                 String[] heightArr = context.getResources().getStringArray(R.array.height_array);
                                 String[] weightArr = context.getResources().getStringArray(R.array.weight_array);
@@ -84,8 +86,93 @@ public class MapTools {
                                 float elevationBonus = (float) (shootingElevation * 3.28084 * 1.0936);
                                 // ALTITUDE RATIO
                                 float altitudeBonus = (float) (currentLocation.getAltitude() * shootingDistance / (100 * 152.4));
+                                double playerRatio = 1.0;
 
-                                Toast.makeText(context, "Distance: " + shootingDistance + "yards\n"+ "Elevation:" + shootingElevation + "\nAdvDist:" + (shootingDistance+elevationBonus), Toast.LENGTH_SHORT).show();
+                                // ============== GENDER ==============
+                                if (user.getGender() == "Male"){
+
+                                } else if (user.getGender() == "Female"){
+
+                                }
+
+                                // ============== AGE ==============
+                                if (user.getAge().equals(ageArr[0])){ // < 11
+                                    playerRatio *= 0.75;
+                                } else if (user.getAge().equals(ageArr[1])){ // 11-15
+                                    playerRatio *= 0.85;
+                                } else if (user.getAge().equals(ageArr[2])){ // 16-29
+                                    playerRatio *= 1.01;
+                                } else if (user.getAge().equals(ageArr[3])){ // 30-40
+                                    playerRatio *= 1;
+                                } else if (user.getAge().equals(ageArr[4])){ // 50+
+                                    playerRatio *= 0.95;
+                                }
+
+                                // ============== HEIGHT ==============
+                                if (user.getHeight().equals(heightArr[0])){ // < 150
+                                    playerRatio *= 0.95;
+                                } else if (user.getHeight().equals(heightArr[1])){ // 151-170
+                                    playerRatio *= 0.97;
+                                } else if (user.getHeight().equals(heightArr[2])){ // 171-190
+                                    playerRatio *= 1;
+                                } else if (user.getHeight().equals(heightArr[3])){ // > 191
+                                    playerRatio *= 1.02;
+                                }
+
+                                // ============== WEIGHT ==============
+                                if (user.getWeight().equals(weightArr[0])){ // < 50
+                                    playerRatio *= 0.95;
+                                } else if (user.getWeight().equals(weightArr[1])){ // 51-70
+                                    playerRatio *= 0.97;
+                                } else if (user.getWeight().equals(weightArr[2])){ // 71-90
+                                    playerRatio *= 1;
+                                } else if (user.getWeight().equals(weightArr[3])){ // > 91
+                                    playerRatio *= 1.02;
+                                }
+
+                                // ============== LEVEL ==============
+                                if (user.getLevel().equals(levelArr[0])){ // beginner
+                                    playerRatio *= 0.9;
+                                } else if (user.getLevel().equals(levelArr[1])){ // average
+                                    playerRatio *= 0.97;
+                                } else if (user.getLevel().equals(levelArr[2])){ // good
+                                    playerRatio *= 1;
+                                } else if (user.getLevel().equals(levelArr[3])){ // expert
+                                    playerRatio *= 1.05;
+                                }
+
+                                // ============== PLAYING FOR ==============
+                                if (user.getStyle().equals(stylePlayArr[0])){ // FOR FUN
+                                    playerRatio *= 0.975;
+                                } else if (user.getStyle().equals(stylePlayArr[1])){ // TRAINING
+                                    playerRatio *= 1;
+                                } else if (user.getStyle().equals(stylePlayArr[2])){ // COMPETITION
+                                    playerRatio *= 1.025;
+                                }
+
+                                // ============== TRAINING FREQUENCY ==============
+                                if (user.getFrequency().equals(trainingFreqArr[0])){ // DAILY
+                                    playerRatio *= 1.025;
+                                } else if (user.getFrequency().equals(trainingFreqArr[1])){ // WEEKLY
+                                    playerRatio *= 1.0125;
+                                } else if (user.getFrequency().equals(trainingFreqArr[2])){ // MONTHKY
+                                    playerRatio *= 1;
+                                } else if (user.getFrequency().equals(trainingFreqArr[3])){ // OCCASIONALLY
+                                    playerRatio *= 0.975;
+                                }
+
+                                // ============== EXP TIME ==============
+                                if (user.getExpTime().equals(expTimeArr[0])){ // < 2 years
+                                    playerRatio *= 0.95;
+                                } else if (user.getExpTime().equals(expTimeArr[1])){ // < 5 years
+                                    playerRatio *= 1;
+                                } else if (user.getExpTime().equals(expTimeArr[2])){ // < 10 years
+                                    playerRatio *= 1.025;
+                                } else if (user.getExpTime().equals(expTimeArr[3])){ // > 10 years
+                                    playerRatio *= 1.05;
+                                }
+
+                                Toast.makeText(context, "Distance: " + (shootingDistance+elevationBonus) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -134,4 +221,5 @@ public class MapTools {
             return "N";
         }
     }
+
 }
