@@ -67,6 +67,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Polyline polyline = null;
     private GolfDatabase db = null;
     private ImageButton btnValidateShoot;
+    private ImageButton btnFinish;
     private TextView textViewWind;
     private TextView textViewWindDirection;
     private TextView tvUserName;
@@ -112,6 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.tvNbShoots = findViewById(R.id.tvNbShoots);
         this.ivSettings = findViewById(R.id.ivSettings);
         this.ivUserPic = findViewById(R.id.ivUserPic);
+        this.btnFinish = findViewById(R.id.btnFinish);
 
         //Fill textview
         this.tvUserName.setText(user.getFirstname());
@@ -123,13 +125,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Set listeners
         btnValidateShoot.setOnClickListener(this);
+        btnFinish.setOnClickListener(this);
         this.ivSettings.setOnClickListener(this);
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
@@ -336,6 +338,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }else{
                 Toast.makeText(this, "Please click where you want to aim before validate", Toast.LENGTH_LONG).show();
             }
+        }
+
+        if(v.getId() == btnFinish.getId()){
+            CustomDialogMessage c = new CustomDialogMessage();
+            c.dialogFinish(this);
         }
 
         if(v.getId() == this.ivSettings.getId()){

@@ -172,7 +172,7 @@ public class MapTools {
                                 CustomDialogMessage c = new CustomDialogMessage();
                                 c.dialogClubAdvise(context, shootingDistance, windDirection, windSpeed, shootingElevation, adviseClub, currentLocation);
 
-                                Toast.makeText(context, "Distance: " + (shootingDistance*playerRatio) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Distance: " + (shootingDistance*playerRatio) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -183,7 +183,6 @@ public class MapTools {
             }
         });
         String destElevation = String.valueOf((int) aimElevation);
-        // Toast.makeText(context, destElevation +" meters", Toast.LENGTH_LONG).show();
     }
 
     public static String getWindDirection(int deg){
