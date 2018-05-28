@@ -9,6 +9,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -120,26 +121,46 @@ public class CustomDialogMessage {
                     dialogBtnFinish.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //TODO Finish action
 
-                            //Get shared preferences nb shots
-                            SharedPreferences prefs = context.getSharedPreferences("SHOTS", 0);
-                            int nbShots = prefs.getInt("nbShots", 0);
-                            //Edit shared preferences shot + 1
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.remove("nbShots");
-                            editor.putInt("nbShots", 0); //Reset nb shot 0 -> User finished playing
-                            editor.commit();
-
-                            MapsActivity.mapsActivity.finish(); //Close the old map activity
-                            context.startActivity(new Intent(context, MapsActivity.class)); //Start new activity
+                            CustomDialogMessage c = new CustomDialogMessage();
+                            c.dialogFinish(context);
                             dialog.cancel();
                         }
                     });
                 }
             }
         });
+    }
 
+    public void dialogFinish(final Context context){
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(1);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_finish);
+        dialog.show();
+
+        //Get shared preferences nb shots
+        final SharedPreferences prefs = context.getSharedPreferences("SHOTS", 0);
+        int nbShots = prefs.getInt("nbShots", 0);
+
+        TextView dialogTvFinish = dialog.findViewById(R.id.dialogTvFinish);
+        Button dialogBtnFinishOk = dialog.findViewById(R.id.dialogBtnFinishOk);
+
+        dialogTvFinish.setText("You finished in "+nbShots+ " shot(s)");
+        dialogBtnFinishOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Edit shared preferences shot + 1
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.remove("nbShots");
+                editor.putInt("nbShots", 0); //Reset nb shot 0 -> User finished playing
+                editor.commit();
+                MapsActivity.mapsActivity.finish(); //Close the old map activity
+                context.startActivity(new Intent(context, MapsActivity.class)); //Start new activity
+                dialog.cancel();
+            }
+        });
 
     }
 }
