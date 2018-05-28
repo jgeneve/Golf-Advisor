@@ -172,7 +172,7 @@ public class MapTools {
                                 CustomDialogMessage c = new CustomDialogMessage();
                                 c.dialogClubAdvise(context, shootingDistance, windDirection, windSpeed, shootingElevation, adviseClub, currentLocation);
 
-                                //Toast.makeText(context, "Distance: " + (shootingDistance*playerRatio) + "yards (Elevation included)\n Player ration:" + playerRatio, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Avg player distance: " + (shootingDistance*playerRatio) + "yards\n Player ratio:" + playerRatio, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

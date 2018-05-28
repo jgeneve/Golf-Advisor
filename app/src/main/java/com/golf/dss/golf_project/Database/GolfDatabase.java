@@ -255,21 +255,25 @@ public class GolfDatabase extends SQLiteOpenHelper{
         Cursor cursor = db.query(true,
                 CLUB_TABLE_NAME,
                 new String[]{this.CLUB_ID, this.CLUB_NAME},
-                gender_club+">"+shootDistance +" AND "+this.CLUB_NAME+ " <> 'SW' AND "+this.CLUB_NAME+ " <> 'Driver'",
+                this.CLUB_NAME+ " <> 'SW' AND "+this.CLUB_NAME+ " <> 'Driver'",
                 null,
                 null,
                 null,
                 "ABS("+gender_club+"-"+shootDistance+")",
                 "1");
         cursor.moveToFirst();
+        Club club = null;
         String clubName = null;
         int clubId = -1;
         if (cursor.getCount() > 0) {
             clubId = cursor.getInt(0);
             clubName = cursor.getString(1);
+            club = new Club(clubId, clubName);
+        }else{
+            club = new Club(2, "3-wood");
         }
+
         cursor.close();
-        Club club = new Club(clubId, clubName);
         return club;
     }
 
